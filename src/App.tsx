@@ -73,7 +73,7 @@ function App() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === '2026') { 
+    if (pin === '900119ñ') { 
       setIsAuthenticated(true);
       sessionStorage.setItem('auth_entre_cucharas', 'true');
       fetchInitialData();
