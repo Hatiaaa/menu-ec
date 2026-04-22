@@ -46,7 +46,7 @@ export async function deleteDish(id: string) {
 }
 
 export async function getHistory(): Promise<WeekMenu[]> {
-  const { data, error } = await supabase.from('menu_history').select('*').order('created_at', { ascending: false }).limit(3);
+  const { data, error } = await supabase.from('menu_history').select('*').order('created_at', { ascending: false }).limit(2);
   if (error) {
     console.error('Error fetching history:', error);
     return [];
@@ -66,8 +66,8 @@ export async function saveWeekToHistory(week: WeekMenu) {
   // Lógica de retención: borrar los más antiguos si hay más de 3
   const { data: allHistory } = await supabase.from('menu_history').select('id').order('created_at', { ascending: false });
   
-  if (allHistory && allHistory.length > 3) {
-    const idsToDelete = allHistory.slice(3).map(h => h.id);
+  if (allHistory && allHistory.length > 2) {
+    const idsToDelete = allHistory.slice(2).map(h => h.id);
     await supabase.from('menu_history').delete().in('id', idsToDelete);
   }
 }

@@ -151,7 +151,7 @@ function App() {
               <div className="controls glass-panel">
                 <div className="stats">
                   <History size={20} />
-                  <span>Semanas en cuarentena: {history.length}/3</span>
+                  <span>Semanas en cuarentena: {history.length}/2</span>
                 </div>
                 <div className="actions">
                   <button className="btn btn-secondary" onClick={() => setShowHistory(true)}>
