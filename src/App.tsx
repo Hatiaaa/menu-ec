@@ -104,7 +104,7 @@ function App() {
 
   const handleImportHistory = async () => {
     try {
-      const parsedWeeks = parseHistoryMarkdown(importText);
+      const parsedWeeks = parseHistoryMarkdown(importText, inventory);
       if (parsedWeeks.length === 0) {
         alert('No se detectó ninguna semana válida. Revisa el formato.');
         return;
