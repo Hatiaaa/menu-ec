@@ -6,27 +6,39 @@ function normalize(str: string): string {
 }
 
 function findDishByFuzzyName(name: string, currentInventory: Dish[]): Dish | null {
-  const cleanName = normalize(name)
-    .replace(/^-\s*/, '')
-    .replace(/ con .*/, '')
-    .replace(/ de .*/, (match) => {
-       const commonDe = ['caldo de', 'sopa de', 'crema de', 'locro de', 'seco de', 'estofado de', 'biche de', 'chupe de', 'sancocho de', 'ensalada de', 'enrollado de', 'ceviche de', 'manizado de', 'sango de', 'cazuela de'];
-       if (commonDe.some(prefix => normalize(match).includes(normalize(prefix)))) return match;
-       return '';
-    })
+  const nInput = normalize(name).replace(/^-\s*/, '');
+  
+  // 1. Intento de coincidencia exacta (normalizada)
+  for (const dish of currentInventory) {
+    if (normalize(dish.name) === nInput) return dish;
+  }
+
+  // 2. Limpieza de sufijos comunes que no suelen estar en la DB
+  const cleanedInput = nInput
+    .replace(/\s+con\s+.*/, '')
+    .replace(/\s+y\s+.*/, '')
+    .replace(/\s+en\s+salsa\s+.*/, '')
+    .replace(/\s+a\s+la\s+.*/, '')
+    .replace(/\s+al\s+.*/, '')
     .replace('yapingacho', 'llapingacho')
     .replace('chancho al horno', 'seco de chancho')
-    .replace('pollo apanado', 'pechuga apanada');
-  
-  const normalizedClean = normalize(cleanName);
+    .replace('pollo apanado', 'pechuga apanada')
+    .trim();
+
+  if (cleanedInput.length < 3) return null;
+
   let bestMatch: Dish | null = null;
   let bestScore = 0;
 
   for (const dish of currentInventory) {
-    const normDish = normalize(dish.name);
-    if (normDish === normalizedClean) return dish;
-    if (normDish.includes(normalizedClean) || normalizedClean.includes(normDish)) {
-       const score = Math.min(normalizedClean.length, normDish.length);
+    const nDish = normalize(dish.name);
+    
+    // Coincidencia exacta tras limpieza
+    if (nDish === cleanedInput) return dish;
+
+    // Coincidencia parcial (el uno contiene al otro)
+    if (nDish.includes(cleanedInput) || cleanedInput.includes(nDish)) {
+       const score = Math.min(cleanedInput.length, nDish.length);
        if (score > bestScore) {
          bestScore = score;
          bestMatch = dish;
@@ -34,13 +46,14 @@ function findDishByFuzzyName(name: string, currentInventory: Dish[]): Dish | nul
     }
   }
 
+  // 3. Fallback: coincidencia por palabras clave
   if (!bestMatch) {
-    const words = normalizedClean.split(' ').filter(w => w.length > 3);
+    const words = cleanedInput.split(' ').filter(w => w.length > 3);
     for (const dish of currentInventory) {
-      const normDish = normalize(dish.name);
+      const nDish = normalize(dish.name);
       let score = 0;
       for (const w of words) {
-        if (normDish.includes(w)) score++;
+        if (nDish.includes(w)) score++;
       }
       if (score > bestScore && score >= 1) {
         bestScore = score;
