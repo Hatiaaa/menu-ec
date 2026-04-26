@@ -31,7 +31,9 @@ function findDishByFuzzyName(name: string, currentInventory: Dish[], targetType:
   cleanedInput = cleanedInput
     .replace('yapingacho', 'llapingacho')
     .replace('chancho al horno', 'seco de chancho')
-    .replace('pollo apanado', 'pechuga apanada');
+    .replace('pollo apanado', 'pechuga apanada')
+    .replace('montubio', 'montuvio')
+    .replace('sopa de lenteja', 'caldo de lenteja');
 
   let bestMatch: Dish | null = null;
   let bestScore = 0;
