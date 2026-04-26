@@ -25,6 +25,7 @@ export function generateMenu(inventory: Dish[], historial: WeekMenu[]): WeekMenu
     const quarantinedIds = new Set<string>();
     historyToConsider.forEach(week => {
       week.forEach(day => {
+        day.sopas.forEach(dish => quarantinedIds.add(dish.id));
         day.segundos.forEach(dish => quarantinedIds.add(dish.id));
       });
     });
@@ -37,7 +38,7 @@ export function generateMenu(inventory: Dish[], historial: WeekMenu[]): WeekMenu
     while (!validWeekFound && weekAttempts < 100) {
       weekAttempts++;
       
-      const availableSoups = [...inventory.filter(d => d.type === 'Sopa')];
+      const availableSoups = [...inventory.filter(d => d.type === 'Sopa' && !quarantinedIds.has(d.id))];
       const availableMains = [...inventory.filter(d => d.type === 'Segundo' && !quarantinedIds.has(d.id))];
       
       const weekMenu: WeekMenu = [];
@@ -170,12 +171,12 @@ export function generateMenu(inventory: Dish[], historial: WeekMenu[]): WeekMenu
 
 export function swapDish(dayMenu: DailyMenu, dishToSwap: Dish, inventory: Dish[], historial: WeekMenu[]): Dish | null {
   // Lógica simplificada: buscar un reemplazo del mismo tipo y misma condición de principal que no esté en el día actual ni en la cuarentena
-  const isSoup = dishToSwap.type === 'Sopa';
   const currentDishIds = new Set([...dayMenu.sopas.map(d => d.id), ...dayMenu.segundos.map(d => d.id)]);
   
   const quarantinedIds = new Set<string>();
   historial.forEach(week => {
     week.forEach(day => {
+      day.sopas.forEach(dish => quarantinedIds.add(dish.id));
       day.segundos.forEach(dish => quarantinedIds.add(dish.id));
     });
   });
@@ -185,7 +186,7 @@ export function swapDish(dayMenu: DailyMenu, dishToSwap: Dish, inventory: Dish[]
     d.isPrincipal === dishToSwap.isPrincipal &&
     d.id !== dishToSwap.id &&
     !currentDishIds.has(d.id) &&
-    (!isSoup ? !quarantinedIds.has(d.id) : true)
+    !quarantinedIds.has(d.id)
   );
 
   // Elegir uno aleatorio
