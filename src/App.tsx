@@ -3,9 +3,9 @@ import { ChefHat, Calendar, RotateCw, History, ArrowLeft, Lock, Copy, RefreshCw 
 import { generateMenu, swapDish } from './lib/generator';
 import type { WeekMenu } from './lib/generator';
 import type { Dish } from './data/platos';
-import { getDishes, getHistory, saveWeekToHistory, saveMultipleWeeksToHistory, saveDish, updateDish, deleteDish } from './lib/api';
+import { getDishes, getHistory, saveWeekToHistory, saveMultipleWeeksToHistory, clearHistory, saveDish, updateDish, deleteDish } from './lib/api';
 import { parseHistoryMarkdown } from './lib/parser';
-import { Upload } from 'lucide-react';
+import { Upload, Trash2 } from 'lucide-react';
 import './App.css';
 
 function App() {
@@ -117,6 +117,19 @@ function App() {
     } catch (error) {
       console.error(error);
       alert('Error al procesar el historial.');
+    }
+  };
+
+  const handleClearHistory = async () => {
+    if (confirm('¿Estás seguro de que quieres borrar TODO el historial? Esta acción no se puede deshacer.')) {
+      try {
+        await clearHistory();
+        alert('Historial borrado correctamente.');
+        fetchInitialData();
+      } catch (error) {
+        console.error(error);
+        alert('Error al borrar el historial.');
+      }
     }
   };
 
@@ -251,6 +264,9 @@ function App() {
             <div className="history-header glass-panel">
               <h2>Historial de Cuarentena (Últimas {history.length} Semanas)</h2>
               <div style={{ display: 'flex', gap: '1rem' }}>
+                <button className="btn btn-secondary" style={{ borderColor: '#ef4444', color: '#ef4444' }} onClick={handleClearHistory}>
+                  <Trash2 size={20} /> Borrar Historial
+                </button>
                 <button className="btn btn-secondary" onClick={() => setShowImport(!showImport)}>
                   <Upload size={20} /> {showImport ? 'Cerrar Importador' : 'Subir Historial'}
                 </button>
