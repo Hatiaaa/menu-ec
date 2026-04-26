@@ -16,19 +16,22 @@ function findDishByFuzzyName(name: string, currentInventory: Dish[], targetType:
     if (normalize(dish.name) === nInput) return dish;
   }
 
-  // 2. Clean suffixes
-  const cleanedInput = nInput
+  // 2. Limpieza de sufijos comunes que no suelen estar en la DB
+  // Solo limpiamos si el resultado no es demasiado corto
+  let cleanedInput = nInput
     .replace(/\s+con\s+.*/, '')
     .replace(/\s+y\s+.*/, '')
     .replace(/\s+en\s+salsa\s+.*/, '')
-    .replace(/\s+a\s+la\s+.*/, '')
-    .replace(/\s+al\s+.*/, '')
-    .replace('yapingacho', 'llapingacho')
-    .replace('chancho al horno', 'seco de chancho')
-    .replace('pollo apanado', 'pechuga apanada')
     .trim();
 
-  if (cleanedInput.length < 3) return null;
+  // Si la limpieza anterior borró demasiado, probamos con una versión más conservadora
+  if (cleanedInput.length < 3) cleanedInput = nInput;
+
+  // Mapeos específicos de corrección común
+  cleanedInput = cleanedInput
+    .replace('yapingacho', 'llapingacho')
+    .replace('chancho al horno', 'seco de chancho')
+    .replace('pollo apanado', 'pechuga apanada');
 
   let bestMatch: Dish | null = null;
   let bestScore = 0;
