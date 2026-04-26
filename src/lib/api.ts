@@ -73,17 +73,18 @@ export async function saveWeekToHistory(week: WeekMenu) {
 }
 
 export async function saveMultipleWeeksToHistory(weeks: WeekMenu[]) {
-  // Primero limpiamos el historial actual (opcional, pero suele ser lo esperado en un bulk import inicial)
-  // O simplemente insertamos los nuevos. El usuario dijo que la app solo guarda 3 semanas.
-  
-  // Borrar todo el historial previo para evitar duplicados en importación masiva
+  // Borrar todo el historial previo
   await clearHistory();
 
-  const { error } = await supabase.from('menu_history').insert(
-    weeks.slice(-3).map(week => ({ menu_data: week }))
-  );
-  
-  if (error) throw error;
+  // Insertar una por una para asegurar que el created_at sea secuencial y correcto
+  for (const week of weeks.slice(-3)) {
+    const { error } = await supabase.from('menu_history').insert([{
+      menu_data: week
+    }]);
+    if (error) throw error;
+    // Pequeño delay para asegurar timestamps distintos
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
 }
 
 export async function clearHistory() {
