@@ -3,7 +3,9 @@ import { ChefHat, Calendar, RotateCw, History, ArrowLeft, Lock, Copy, RefreshCw 
 import { generateMenu, swapDish } from './lib/generator';
 import type { WeekMenu } from './lib/generator';
 import type { Dish } from './data/platos';
-import { getDishes, getHistory, saveWeekToHistory, saveDish, updateDish, deleteDish } from './lib/api';
+import { getDishes, getHistory, saveWeekToHistory, saveMultipleWeeksToHistory, saveDish, updateDish, deleteDish } from './lib/api';
+import { parseHistoryMarkdown } from './lib/parser';
+import { Upload } from 'lucide-react';
 import './App.css';
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
   const [inventory, setInventory] = useState<Dish[]>([]);
   const [currentTab, setCurrentTab] = useState<'generator' | 'inventory'>('generator');
   const [showHistory, setShowHistory] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importText, setImportText] = useState('');
   
   // States para el inventario
   const [editingDish, setEditingDish] = useState<Dish | null>(null);
@@ -98,7 +102,23 @@ function App() {
     alert('¡Menú copiado al portapapeles! Ya puedes pegarlo en WhatsApp.');
   };
 
-
+  const handleImportHistory = async () => {
+    try {
+      const parsedWeeks = parseHistoryMarkdown(importText);
+      if (parsedWeeks.length === 0) {
+        alert('No se detectó ninguna semana válida. Revisa el formato.');
+        return;
+      }
+      await saveMultipleWeeksToHistory(parsedWeeks);
+      alert(`¡Éxito! Se importaron ${parsedWeeks.length} semanas (se guardaron las 3 más recientes).`);
+      setImportText('');
+      setShowImport(false);
+      fetchInitialData();
+    } catch (error) {
+      console.error(error);
+      alert('Error al procesar el historial.');
+    }
+  };
 
   if (!isAuthenticated) {
     return (
@@ -230,10 +250,34 @@ function App() {
           <div className="history-view">
             <div className="history-header glass-panel">
               <h2>Historial de Cuarentena (Últimas {history.length} Semanas)</h2>
-              <button className="btn btn-secondary" onClick={() => setShowHistory(false)}>
-                <ArrowLeft size={20} /> Volver al Generador
-              </button>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button className="btn btn-secondary" onClick={() => setShowImport(!showImport)}>
+                  <Upload size={20} /> {showImport ? 'Cerrar Importador' : 'Subir Historial'}
+                </button>
+                <button className="btn btn-secondary" onClick={() => setShowHistory(false)}>
+                  <ArrowLeft size={20} /> Volver al Generador
+                </button>
+              </div>
             </div>
+
+            {showImport && (
+              <div className="import-section glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
+                <h3 style={{ marginTop: 0, color: 'var(--primary)' }}>Cargar Historial Manualmente</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  Pega aquí el contenido de tu archivo <code>historial_menus.md</code>.
+                </p>
+                <textarea 
+                  className="login-input" 
+                  style={{ width: '100%', height: '200px', margin: '1rem 0', fontFamily: 'monospace', fontSize: '0.8rem' }}
+                  placeholder="******** LUNES Sopas: - Sopa de... Segundos: - Plato de..."
+                  value={importText}
+                  onChange={(e) => setImportText(e.target.value)}
+                />
+                <button className="btn btn-save" onClick={handleImportHistory}>
+                  Analizar y Guardar Historial
+                </button>
+              </div>
+            )}
             
 
             {history.length === 0 ? (
