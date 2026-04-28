@@ -91,7 +91,8 @@
 
 .actions {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .btn-save {
@@ -231,4 +232,777 @@
 .badge.protein {
   background: rgba(255, 255, 255, 0.1);
   color: #94a3b8;
+}
+
+/* Dish item con select */
+.dish-item--select {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 10px 12px;
+  border-left-color: rgba(249, 115, 22, 0.15);
+}
+
+.dish-info {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 1.2rem;
+}
+
+.dish-select {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: auto;
+}
+
+.dish-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+.dish-select:hover {
+  border-color: rgba(249, 115, 22, 0.4);
+}
+
+.dish-select option {
+  background: #1e1e2e;
+  color: white;
+}
+
+.dish-select option:first-child {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ── Historial editable ── */
+.history-week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.history-week-header h3 {
+  margin: 0;
+  color: #10b981;
+}
+
+.saving-indicator {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 400;
+  animation: pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+
+.history-day-card {
+  padding: 1.2rem;
+}
+
+.day-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.btn-icon--danger {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.btn-icon--danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  gap: 4px;
+}
+
+/* ══════════════════════════════════════
+   INVENTARIO REDISEÑADO
+══════════════════════════════════════ */
+
+.inventory-manager {
+  padding: 2rem;
+}
+
+/* Stats bar */
+.inv-stats-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.inv-stat-card {
+  flex: 1 1 140px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 3px solid var(--primary);
+}
+
+.inv-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inv-stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-light);
+  line-height: 1;
+}
+
+.inv-stat-sub {
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+/* Toolbar (buscador + filtros) */
+.inv-toolbar {
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.inv-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+  flex: 1 1 200px;
+}
+
+.inv-search-icon {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.inv-search {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  padding: 8px 32px 8px 34px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.inv-search:focus {
+  border-color: var(--primary);
+}
+
+.inv-search-clear {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 4px;
+}
+
+.inv-search-clear:hover { color: white; }
+
+/* Chips de filtro */
+.inv-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.inv-filter-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 2px;
+  white-space: nowrap;
+}
+
+.inv-chip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.inv-chip:hover {
+  background: rgba(255,255,255,0.14);
+  color: white;
+}
+
+.inv-chip--active {
+  background: rgba(249, 115, 22, 0.2);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Formulario */
+.inv-form {
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border-left: 3px solid var(--primary);
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.inv-form-title {
+  margin: 0 0 1.25rem 0;
+  font-size: 1.1rem;
+  color: var(--text-light);
+}
+
+.inv-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .inv-form-grid { grid-template-columns: 1fr 1fr; }
+  .inv-form-field--wide { grid-column: 1 / -1; }
+}
+
+.inv-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inv-form-field label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.inv-input {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.inv-input:focus { border-color: var(--primary); }
+
+.inv-form-field--check {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.inv-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 0.95rem;
+}
+
+.inv-checkbox-label input { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+
+.inv-form-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.inv-form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+/* Grid de tarjetas */
+.inv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.inv-card {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-left: 4px solid transparent;
+}
+
+.inv-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+/* Colores por proteína */
+.inv-card--res       { border-left-color: #ef4444; }
+.inv-card--pollo     { border-left-color: #f59e0b; }
+.inv-card--cerdo     { border-left-color: #ec4899; }
+.inv-card--marisco   { border-left-color: #06b6d4; }
+.inv-card--vegetariano { border-left-color: #22c55e; }
+.inv-card--grano     { border-left-color: #a78bfa; }
+.inv-card--huevo     { border-left-color: #fde68a; }
+.inv-card--mixto     { border-left-color: #94a3b8; }
+
+.inv-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.inv-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.inv-type-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.inv-type-badge--sopa {
+  background: rgba(6, 182, 212, 0.15);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.inv-type-badge--segundo {
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.inv-card-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.inv-card:hover .inv-card-actions { opacity: 1; }
+
+.inv-action-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.inv-action-btn:hover { background: rgba(255,255,255,0.18); }
+
+.inv-card-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-light);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.inv-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Badges de proteína con color */
+.inv-protein-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.inv-protein--res         { background: rgba(239,68,68,.2);  color: #fca5a5; }
+.inv-protein--pollo       { background: rgba(245,158,11,.2); color: #fcd34d; }
+.inv-protein--cerdo       { background: rgba(236,72,153,.2); color: #f9a8d4; }
+.inv-protein--marisco     { background: rgba(6,182,212,.2);  color: #67e8f9; }
+.inv-protein--vegetariano { background: rgba(34,197,94,.2);  color: #86efac; }
+.inv-protein--grano       { background: rgba(167,139,250,.2);color: #c4b5fd; }
+.inv-protein--huevo       { background: rgba(253,230,138,.2);color: #fde68a; }
+.inv-protein--mixto       { background: rgba(148,163,184,.2);color: #cbd5e1; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE - MOBILE FIRST (max 640px)
+══════════════════════════════════════════════ */
+
+/* Tablet - ajustes intermedios */
+@media (max-width: 860px) {
+  .app-container {
+    padding: 1rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .history-header div {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .history-week-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .inv-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inv-toolbar .btn {
+    margin-left: 0 !important;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .inv-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .inv-form-field--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobile - pantallas pequeñas */
+@media (max-width: 640px) {
+  /* Layout general */
+  .app-container {
+    padding: 0.75rem;
+  }
+
+  /* Header */
+  .header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .logo h1 {
+    font-size: 1.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* Login */
+  .login-container {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+
+  .login-box {
+    padding: 2rem 1.25rem;
+  }
+
+  /* Tabs */
+  .tabs {
+    padding: 0.5rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .tabs .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+
+  /* Barra de controles del generador */
+  .controls {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Grid del menú semanal */
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .day-card {
+    padding: 1rem;
+  }
+
+  .day-card:hover {
+    transform: none; /* Deshabilitar hover lift en móvil */
+  }
+
+  .day-title {
+    font-size: 1.2rem;
+  }
+
+  /* Dropdowns de platos */
+  .dish-select {
+    font-size: 0.85rem;
+    padding: 7px 8px;
+  }
+
+  /* Historial */
+  .history-view {
+    overflow: hidden;
+  }
+
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .history-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .history-header > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .history-header > div .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .history-week {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .history-week-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .history-week-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .history-day-card {
+    padding: 0.75rem;
+  }
+
+  .day-card-header .btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  /* Inventario */
+  .inventory-manager {
+    padding: 0.75rem;
+  }
+
+  .inv-stats-bar {
+    gap: 0.5rem;
+  }
+
+  .inv-stat-card {
+    padding: 0.75rem 1rem;
+    flex: 1 1 90px;
+  }
+
+  .inv-stat-number {
+    font-size: 1.5rem;
+  }
+
+  .inv-toolbar {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .inv-toolbar .btn {
+    margin-left: 0 !important;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .inv-filter-group {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .inv-filter-group::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Formulario de inventario */
+  .inv-form {
+    padding: 1rem;
+  }
+
+  .inv-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inv-form-field--wide {
+    grid-column: auto;
+  }
+
+  .inv-form-actions {
+    flex-direction: column;
+  }
+
+  .inv-form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Grid de tarjetas de inventario */
+  .inv-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .inv-card {
+    padding: 0.75rem;
+  }
+
+  .inv-card-name {
+    font-size: 0.85rem;
+  }
+
+  /* Mostrar siempre los botones de acción en móvil (sin hover) */
+  .inv-card-actions {
+    opacity: 1;
+  }
+
+  /* Estado vacío */
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  /* Import section */
+  .import-section {
+    padding: 1rem !important;
+  }
+}
+
+/* Extra pequeño - 380px y menos (ej. iPhone SE) */
+@media (max-width: 380px) {
+  .inv-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs .btn {
+    font-size: 0.78rem;
+    padding: 8px 6px;
+  }
+
+  .inv-filter-group .inv-chip {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
 }

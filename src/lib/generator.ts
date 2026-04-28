@@ -169,10 +169,50 @@ export function generateMenu(inventory: Dish[], historial: WeekMenu[]): WeekMenu
 }
 
 export function swapDish(dayMenu: DailyMenu, dishToSwap: Dish, inventory: Dish[], historial: WeekMenu[]): Dish | null {
-  // Lógica simplificada: buscar un reemplazo del mismo tipo y misma condición de principal que no esté en el día actual ni en la cuarentena
+  const candidates = getValidReplacements(dayMenu, dishToSwap, inventory, historial);
+  if (candidates.length === 0) return null;
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+/**
+ * Devuelve la lista completa de platos válidos para reemplazar `dishToSwap` en `dayMenu`,
+ * respetando todas las reglas del negocio:
+ *  - Mismo tipo (Sopa / Segundo) y misma condición de Principal.
+ *  - No estar ya asignado en este día ni en ningún otro día de la semana actual.
+ *  - Segundos: no estar en cuarentena (historial de semanas anteriores).
+ *  - No violar las reglas cruzadas de proteínas del día resultante.
+ *
+ * @param weekMenu  El menú completo de la semana en edición (para excluir platos ya usados en otros días).
+ * @param dayIndex  El índice del día actual dentro de weekMenu.
+ */
+export function getValidReplacements(
+  dayMenu: DailyMenu,
+  dishToSwap: Dish,
+  inventory: Dish[],
+  historial: WeekMenu[],
+  weekMenu?: WeekMenu,
+  dayIndex?: number
+): Dish[] {
   const isSoup = dishToSwap.type === 'Sopa';
-  const currentDishIds = new Set([...dayMenu.sopas.map(d => d.id), ...dayMenu.segundos.map(d => d.id)]);
-  
+
+  // IDs de los platos que ya están en el día (excepto el que se va a reemplazar)
+  const currentDishIds = new Set([
+    ...dayMenu.sopas.map(d => d.id),
+    ...dayMenu.segundos.map(d => d.id),
+  ]);
+  currentDishIds.delete(dishToSwap.id);
+
+  // IDs de platos usados en OTROS días de la semana actual (regla: nada se repite en la semana)
+  const otherDaysIds = new Set<string>();
+  if (weekMenu && dayIndex !== undefined) {
+    weekMenu.forEach((otherDay, idx) => {
+      if (idx === dayIndex) return; // Saltamos el día actual
+      otherDay.sopas.forEach(d => otherDaysIds.add(d.id));
+      otherDay.segundos.forEach(d => otherDaysIds.add(d.id));
+    });
+  }
+
+  // IDs en cuarentena (solo aplica a segundos, de semanas anteriores en historial)
   const quarantinedIds = new Set<string>();
   historial.forEach(week => {
     week.forEach(day => {
@@ -180,15 +220,66 @@ export function swapDish(dayMenu: DailyMenu, dishToSwap: Dish, inventory: Dish[]
     });
   });
 
-  const availableReplacements = inventory.filter(d => 
-    d.type === dishToSwap.type &&
-    d.isPrincipal === dishToSwap.isPrincipal &&
-    d.id !== dishToSwap.id &&
-    !currentDishIds.has(d.id) &&
-    (!isSoup ? !quarantinedIds.has(d.id) : true)
-  );
+  return inventory.filter(candidate => {
+    // Mismo tipo y condición de principal
+    if (candidate.type !== dishToSwap.type) return false;
+    if (candidate.isPrincipal !== dishToSwap.isPrincipal) return false;
+    // No el mismo plato
+    if (candidate.id === dishToSwap.id) return false;
+    // No ya en este día
+    if (currentDishIds.has(candidate.id)) return false;
+    // No en ningún otro día de la semana actual
+    if (otherDaysIds.has(candidate.id)) return false;
+    // Cuarentena solo para segundos
+    if (!isSoup && quarantinedIds.has(candidate.id)) return false;
 
-  // Elegir uno aleatorio
-  if (availableReplacements.length === 0) return null;
-  return availableReplacements[Math.floor(Math.random() * availableReplacements.length)];
+    // --- Validación de proteínas ---
+    if (isSoup) {
+      // Construir la lista de sopas resultante si aplicamos el reemplazo
+      const resultSoups = dayMenu.sopas.map(s => (s.id === dishToSwap.id ? candidate : s));
+
+      // Regla: las 2 sopas no pueden compartir proteína
+      const soupProteins = resultSoups.map(s => s.protein);
+      if (new Set(soupProteins).size < soupProteins.length) return false;
+
+      // Regla cruzada: si en segundos hay una proteína repetida 2 veces,
+      // ninguna sopa puede tener esa proteína.
+      const mainProteinCounts = dayMenu.segundos.reduce((acc, d) => {
+        acc[d.protein] = (acc[d.protein] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      const repeatedMainProteins = new Set(
+        Object.entries(mainProteinCounts)
+          .filter(([, count]) => count >= 2)
+          .map(([p]) => p)
+      );
+      if (repeatedMainProteins.has(candidate.protein)) return false;
+    } else {
+      // Construir la lista de segundos resultante si aplicamos el reemplazo
+      const resultMains = dayMenu.segundos.map(d => (d.id === dishToSwap.id ? candidate : d));
+
+      // Regla: max 1 marisco en segundos
+      const mainProteinCounts = resultMains.reduce((acc, d) => {
+        acc[d.protein] = (acc[d.protein] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      if ((mainProteinCounts['Marisco'] || 0) > 1) return false;
+      // Regla: max 2 de cualquier otra proteína en segundos
+      if (Object.values(mainProteinCounts).some(c => c > 2)) return false;
+
+      // Regla cruzada inversa: si con este reemplazo una proteína queda repetida 2 veces en segundos,
+      // ninguna sopa del día puede tener esa proteína.
+      const repeatedMainProteins = new Set(
+        Object.entries(mainProteinCounts)
+          .filter(([, count]) => count >= 2)
+          .map(([p]) => p)
+      );
+      const soupProteins = new Set(dayMenu.sopas.map(s => s.protein));
+      for (const rp of repeatedMainProteins) {
+        if (soupProteins.has(rp)) return false;
+      }
+    }
+
+    return true;
+  });
 }
