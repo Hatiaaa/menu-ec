@@ -252,7 +252,7 @@ function App() {
   const renderDishList = (
     dishes: Dish[],
     dayMenu: DailyMenu,
-    isSoup: boolean,
+    _isSoup: boolean,
     weekMenu: WeekMenu,
     dayIndex: number,
     onSwap: (currentDish: Dish, replacementId: string) => void

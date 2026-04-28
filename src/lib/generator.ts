@@ -276,7 +276,7 @@ export function getValidReplacements(
       );
       const soupProteins = new Set(dayMenu.sopas.map(s => s.protein));
       for (const rp of repeatedMainProteins) {
-        if (soupProteins.has(rp)) return false;
+        if (soupProteins.has(rp as import('../data/platos').Protein)) return false;
       }
     }
 
