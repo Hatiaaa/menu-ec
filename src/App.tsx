@@ -190,7 +190,7 @@ function App() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === '900119ñ') {
+    if (pin === '2020') {
       setIsAuthenticated(true);
       sessionStorage.setItem('auth_entre_cucharas', 'true');
       fetchInitialData();
@@ -558,7 +558,7 @@ function App() {
 
             <div className="inv-filter-group">
               <span className="inv-filter-label">Proteína:</span>
-              {['all', 'Res', 'Pollo', 'Cerdo', 'Marisco', 'Vegetariano', 'Grano', 'Huevo'].map(p => (
+              {['all', 'Res', 'Pollo', 'Gallina', 'Cerdo', 'Marisco', 'Vegetariano', 'Grano', 'Huevo'].map(p => (
                 <button
                   key={p}
                   className={`inv-chip ${filterProtein === p ? 'inv-chip--active' : ''}`}
@@ -620,6 +620,7 @@ function App() {
                   >
                     <option value="Res">🥩 Res</option>
                     <option value="Pollo">🍗 Pollo</option>
+                    <option value="Gallina">🐔 Gallina</option>
                     <option value="Cerdo">🐷 Cerdo</option>
                     <option value="Marisco">🦐 Marisco</option>
                     <option value="Vegetariano">🥦 Vegetariano</option>

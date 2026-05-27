@@ -1,4 +1,4 @@
-export type Protein = 'Res' | 'Pollo' | 'Cerdo' | 'Marisco' | 'Vegetariano' | 'Mixto';
+export type Protein = 'Res' | 'Pollo' | 'Gallina' | 'Cerdo' | 'Marisco' | 'Vegetariano' | 'Mixto';
 export type DishType = 'Sopa' | 'Segundo';
 
 export interface Dish {
@@ -14,7 +14,7 @@ export const inventory: Dish[] = [
   // SOPAS - PRINCIPALES
   { id: 's1', name: 'Caldo de bola', type: 'Sopa', protein: 'Res', isPrincipal: true, category: 'Caldos' },
   { id: 's2', name: 'Caldo de pata', type: 'Sopa', protein: 'Res', isPrincipal: true, category: 'Caldos' },
-  { id: 's3', name: 'Caldo de gallina', type: 'Sopa', protein: 'Pollo', isPrincipal: true, category: 'Caldos' },
+  { id: 's3', name: 'Caldo de gallina', type: 'Sopa', protein: 'Gallina', isPrincipal: true, category: 'Caldos' },
   { id: 's4', name: 'Sancocho de hueso', type: 'Sopa', protein: 'Res', isPrincipal: true, category: 'Caldos' },
   { id: 's5', name: 'Caldo de torreja', type: 'Sopa', protein: 'Res', isPrincipal: true, category: 'Caldos' },
   { id: 's6', name: 'Caldo de mondongo', type: 'Sopa', protein: 'Res', isPrincipal: true, category: 'Caldos' },
@@ -51,7 +51,7 @@ export const inventory: Dish[] = [
   { id: 'p1', name: 'Pollo al horno', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },
   { id: 'p2', name: 'Pollo al jugo', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },
   { id: 'p3', name: 'Seco de pollo', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },
-  { id: 'p4', name: 'Seco de gallina', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },
+  { id: 'p4', name: 'Seco de gallina', type: 'Segundo', protein: 'Gallina', isPrincipal: true, category: 'Gallina' },
   { id: 'p5', name: 'Pollo a la Coca-Cola', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },
   { id: 'p6', name: 'Pollo a la naranja', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },
   { id: 'p7', name: 'Pollo al curry', type: 'Segundo', protein: 'Pollo', isPrincipal: true, category: 'Pollo' },

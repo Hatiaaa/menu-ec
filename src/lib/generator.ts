@@ -60,16 +60,23 @@ export function generateMenu(inventory: Dish[], historial: WeekMenu[]): WeekMenu
           const daySoups: Dish[] = [];
           const dayMains: Dish[] = [];
 
-          // 1 Principal
-          const mainPrincipals = tempMains.filter(d => d.isPrincipal);
-          const selectedMainPrincipal = popRandomDish(mainPrincipals);
-          if (selectedMainPrincipal) dayMains.push(selectedMainPrincipal);
+          if (isSaturday) {
+            // Sábado: sin restricción de principales, elegir libremente
+            for (let i = 0; i < numMains; i++) {
+              const dish = popRandomDish(tempMains);
+              if (dish) dayMains.push(dish);
+            }
+          } else {
+            // Días normales: exactamente 1 Principal + (N-1) No Principales
+            const mainPrincipals = tempMains.filter(d => d.isPrincipal);
+            const selectedMainPrincipal = popRandomDish(mainPrincipals);
+            if (selectedMainPrincipal) dayMains.push(selectedMainPrincipal);
 
-          // N No Principales
-          const mainNonPrincipals = tempMains.filter(d => !d.isPrincipal);
-          for (let i = 0; i < numMains - 1; i++) {
-            const dish = popRandomDish(mainNonPrincipals);
-            if (dish) dayMains.push(dish);
+            const mainNonPrincipals = tempMains.filter(d => !d.isPrincipal);
+            for (let i = 0; i < numMains - 1; i++) {
+              const dish = popRandomDish(mainNonPrincipals);
+              if (dish) dayMains.push(dish);
+            }
           }
 
           // Validaciones de Segundos
@@ -221,9 +228,8 @@ export function getValidReplacements(
   });
 
   return inventory.filter(candidate => {
-    // Mismo tipo y condición de principal
+    // Mismo tipo
     if (candidate.type !== dishToSwap.type) return false;
-    if (candidate.isPrincipal !== dishToSwap.isPrincipal) return false;
     // No el mismo plato
     if (candidate.id === dishToSwap.id) return false;
     // No ya en este día
